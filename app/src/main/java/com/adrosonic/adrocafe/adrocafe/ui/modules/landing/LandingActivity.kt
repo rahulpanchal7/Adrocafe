@@ -1,5 +1,6 @@
 package com.adrosonic.adrocafe.adrocafe.ui.modules.landing
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -11,16 +12,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.adrosonic.adrocafe.adrocafe.R
+import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
+import com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.login.LoginActivity
+import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodFragment
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.activity_landing.*
 import kotlinx.android.synthetic.main.app_bar_landing.*
 
 class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private var preferenceHelper: PreferenceHelper ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
         setSupportActionBar(toolbar_landing)
 
+        preferenceHelper = PreferenceHelper(application)
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar_landing, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -69,23 +77,32 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
+            R.id.nav_food -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container_landing, FoodFragment(),"food")
+                    .commit()
             }
-            R.id.nav_gallery -> {
+            R.id.nav_oders -> {
 
             }
-            R.id.nav_slideshow -> {
+            R.id.nav_credits -> {
 
             }
-            R.id.nav_manage -> {
+            R.id.nav_about -> {
 
             }
-            R.id.nav_share -> {
+            R.id.nav_history -> {
 
             }
-            R.id.nav_send -> {
+            R.id.nav_settings -> {
 
+            }
+            R.id.nav_logout -> {
+//                preferenceHelper?.removeValue(ConstantsDirectory.PREFS_ACCESS_TOKEN)
+                preferenceHelper?.save(ConstantsDirectory.IS_LOGGED_IN, false)
+                startActivity(Intent(this,LoginActivity::class.java))
+                finish()
             }
         }
 

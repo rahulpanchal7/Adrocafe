@@ -6,8 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
+import com.adrosonic.adrocafe.adrocafe.databinding.FragmentLoginBinding
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.greenrobot.eventbus.EventBus
@@ -18,22 +21,28 @@ class LoginFragment : Fragment() {
         fun newInstance() = LoginFragment()
     }
 
-    private lateinit var viewModel: LoginViewModel
+    private var viewModel: LoginViewModel ?= null
+    private var binding: FragmentLoginBinding ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_login, container, false)
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        return binding?.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         // TODO: Use the ViewModel
-        button_sign_in.setOnClickListener {
-            EventBus.getDefault().post(MessageEvent(ConstantsDirectory.loginfragment))
-        }
+        binding?.model = viewModel
+
+        viewModel?.navigateTo?.observe(this, Observer {event ->
+            event.getContentIfNotHandled()?.let {
+                EventBus.getDefault().post(MessageEvent(it))
+            }
+        })
     }
 
 }

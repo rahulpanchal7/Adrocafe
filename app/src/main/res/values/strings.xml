@@ -17,4 +17,22 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="food">Food</string>
+    <string name="order">Order</string>
+    <string name="credits">Credits</string>
+    <string name="about">About</string>
+    <string name="transaction_history">Transaction History</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="menu">Menu</string>
+    <string name="all">All</string>
+    <string name="snacks">Snacks</string>
+    <string name="beverages">Beverages</string>
+    <string name="others">Others</string>
+    <string name="view_cart">View Cart</string>
+    <string name="open_bracket">(</string>
+    <string name="closing_bracket">items in cart )</string>
+    <string name="ruppee">₹</string>
+    <string name="checkout"><![CDATA[Checkout >]]></string>
+    <string name="left_hurry">left ! Hurry !</string>
 </resources>
