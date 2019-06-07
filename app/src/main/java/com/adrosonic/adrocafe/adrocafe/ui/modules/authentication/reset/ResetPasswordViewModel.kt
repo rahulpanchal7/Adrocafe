@@ -42,7 +42,7 @@ class ResetPasswordViewModel(application: Application) : AndroidViewModel(applic
             jwt?.let {token ->
                 API
                     .login()
-                    .resetPassword(UserResetModel(username, password, newpassword), token)
+                    .validateUser(UserResetModel(username, password, newpassword))
                     .enqueue(object : Callback<String>{
                         override fun onFailure(call: Call<String>, t: Throwable) {
                             t.printStackTrace()

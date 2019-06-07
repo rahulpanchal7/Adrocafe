@@ -28,6 +28,11 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         setContentView(R.layout.activity_landing)
         setSupportActionBar(toolbar_landing)
 
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.container_landing, FoodFragment(), ConstantsDirectory.foodfragment)
+            .commit()
+
         preferenceHelper = PreferenceHelper(application)
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar_landing, R.string.navigation_drawer_open, R.string.navigation_drawer_close

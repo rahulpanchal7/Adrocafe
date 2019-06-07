@@ -54,8 +54,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             preferenceHelper.save(ConstantsDirectory.PREFS_USERNAME, editTextUsername.value!!)
                             preferenceHelper.save(ConstantsDirectory.PREFS_PASSWORD, editTextPassword.value!!)
                         } ?: Log.i("Access Token","Not Found")
-                        it.isvaliduser?.let {
-                            if (it){
+                        it.isvaliduser?.let {isValid ->
+                            if (!isValid){
                                 preferenceHelper.save(ConstantsDirectory.IS_LOGGED_IN, true)
                                 _navigateTo.value = Event(ConstantsDirectory.landingactivity)
                             } else {
