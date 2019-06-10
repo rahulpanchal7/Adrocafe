@@ -3,6 +3,7 @@ package com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.Product
@@ -24,8 +25,16 @@ class FoodListAdapter(private var products: List<Product>): RecyclerView.Adapter
         holder.bind(products[position])
     }
 
+    fun swap(products: List<Product>){
+        val diffCallback = FoodDiffCallback(this.products, products)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        this.products = products
+        diffResult.dispatchUpdatesTo(this)
+    }
+
     inner class ViewHolder(private val binding: ItemFoodListBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product){
+            binding.product = product
             binding.executePendingBindings()
         }
     }

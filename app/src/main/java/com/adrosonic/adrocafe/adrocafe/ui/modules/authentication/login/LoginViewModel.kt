@@ -8,10 +8,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adrosonic.adrocafe.adrocafe.data.Event
+import com.adrosonic.adrocafe.adrocafe.data.User
 import com.adrosonic.adrocafe.adrocafe.data.UserLoginModel
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
 import com.adrosonic.adrocafe.adrocafe.repository.remote.API
-import com.adrosonic.adrocafe.adrocafe.repository.remote.response.LoginResponse
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,21 +40,21 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         API
             .login()
             .login(UserLoginModel(editTextUsername.value,editTextPassword.value))
-            .enqueue(object: Callback<LoginResponse>{
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            .enqueue(object: Callback<User>{
+            override fun onFailure(call: Call<User>, t: Throwable) {
                 t.printStackTrace()
             }
 
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful){
                     val loginResponse = response.body()
-                    loginResponse?.let {
-                        it.jwtToken?.let {jwt ->
-                            preferenceHelper.save(ConstantsDirectory.PREFS_ACCESS_TOKEN, jwt)
+                    loginResponse?.let {user ->
+                        user.jwtToken.let {jwt ->
+                            preferenceHelper.save(ConstantsDirectory.PREFS_ACCESS_TOKEN, "Bearer $jwt")
                             preferenceHelper.save(ConstantsDirectory.PREFS_USERNAME, editTextUsername.value!!)
                             preferenceHelper.save(ConstantsDirectory.PREFS_PASSWORD, editTextPassword.value!!)
-                        } ?: Log.i("Access Token","Not Found")
-                        it.isvaliduser?.let {isValid ->
+                        }
+                        user.isvaliduser.let {isValid ->
                             if (!isValid){
                                 preferenceHelper.save(ConstantsDirectory.IS_LOGGED_IN, true)
                                 _navigateTo.value = Event(ConstantsDirectory.landingactivity)

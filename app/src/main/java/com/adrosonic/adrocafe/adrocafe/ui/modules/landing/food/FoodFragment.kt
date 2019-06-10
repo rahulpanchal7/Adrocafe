@@ -6,8 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.adrosonic.adrocafe.adrocafe.R
+import com.adrosonic.adrocafe.adrocafe.data.Product
+import kotlinx.android.synthetic.main.fragment_all_food.*
 import kotlinx.android.synthetic.main.fragment_food.*
 
 class FoodFragment : Fragment() {
@@ -15,8 +19,6 @@ class FoodFragment : Fragment() {
     companion object {
         fun newInstance() = FoodFragment()
     }
-
-    private var viewModel: FoodViewModel ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,12 +29,13 @@ class FoodFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
-        // TODO: Use the ViewModel
-        fragmentManager?.let {
+
+        childFragmentManager.let {
             viewPager_food.adapter = FoodPagerAdapter(it)
             tabLayout_food.setupWithViewPager(viewPager_food)
         }
     }
+
+
 
 }

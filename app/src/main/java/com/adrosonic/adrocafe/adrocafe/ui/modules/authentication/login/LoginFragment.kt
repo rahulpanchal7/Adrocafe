@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
 import com.adrosonic.adrocafe.adrocafe.databinding.FragmentLoginBinding
+import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodListAdapter
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.greenrobot.eventbus.EventBus
@@ -23,6 +24,7 @@ class LoginFragment : Fragment() {
 
     private var viewModel: LoginViewModel ?= null
     private var binding: FragmentLoginBinding ?= null
+    private var foodListAdapter: FoodListAdapter ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -1,8 +1,8 @@
 package com.adrosonic.adrocafe.adrocafe.repository.remote.dao
 
+import com.adrosonic.adrocafe.adrocafe.data.User
 import com.adrosonic.adrocafe.adrocafe.data.UserLoginModel
 import com.adrosonic.adrocafe.adrocafe.data.UserResetModel
-import com.adrosonic.adrocafe.adrocafe.repository.remote.response.LoginResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,7 +12,7 @@ import retrofit2.http.POST
 interface LoginDao {
 
     @POST("auth/signin")
-    fun login(@Body userLoginModel: UserLoginModel): Call<LoginResponse>
+    fun login(@Body userLoginModel: UserLoginModel): Call<User>
 
     @POST("auth/validateuser")
     fun validateUser(@Body userResetModel: UserResetModel): Call<String>
