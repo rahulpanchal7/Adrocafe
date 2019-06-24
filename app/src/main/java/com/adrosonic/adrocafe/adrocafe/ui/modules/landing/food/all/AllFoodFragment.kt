@@ -24,7 +24,7 @@ class AllFoodFragment : Fragment() {
 
     private var viewModel: FoodViewModel?= null
     private var binding: FragmentAllFoodBinding ?= null
-    private var foodListAdapter: FoodListAdapter?= null
+    private var foodListAdapter: FoodListAdapter ?= null
     private var products = mutableListOf<Product>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

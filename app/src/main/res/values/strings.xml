@@ -35,4 +35,11 @@
     <string name="ruppee">₹</string>
     <string name="checkout"><![CDATA[Checkout >]]></string>
     <string name="left_hurry">left ! Hurry !</string>
+    <string name="itemfood">itemfood</string>
+    <string name="order_history">Order History</string>
+    <string name="successful">Successful</string>
+    <string name="refunds">Refunds</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

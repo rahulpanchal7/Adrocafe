@@ -7,12 +7,21 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.adrosonic.adrocafe.adrocafe.AdrocafeApp
 import com.adrosonic.adrocafe.adrocafe.data.Event
 import com.adrosonic.adrocafe.adrocafe.data.User
 import com.adrosonic.adrocafe.adrocafe.data.UserLoginModel
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
 import com.adrosonic.adrocafe.adrocafe.repository.remote.API
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
+import io.reactivex.CompletableObserver
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,18 +30,16 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val preferenceHelper = PreferenceHelper(application)
 
+    private val appDatabase = (application.applicationContext as AdrocafeApp).appDatabase
+
     private val _navigateTo = MutableLiveData<Event<String>>()
 
-    @get: Bindable
     val navigateTo : LiveData<Event<String>> = _navigateTo
 
-    @Bindable
     var editTextUsername = MutableLiveData<String>()
 
-    @Bindable
     var editTextPassword = MutableLiveData<String>()
 
-    @get: Bindable
     val valid = ObservableBoolean(true)
 
     fun onLoginClick(){
@@ -55,13 +62,31 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             preferenceHelper.save(ConstantsDirectory.PREFS_PASSWORD, editTextPassword.value!!)
                         }
                         user.isvaliduser.let {isValid ->
-                            if (!isValid){
+                            if (!isValid) {
                                 preferenceHelper.save(ConstantsDirectory.IS_LOGGED_IN, true)
                                 _navigateTo.value = Event(ConstantsDirectory.landingactivity)
                             } else {
                                 _navigateTo.value = Event(ConstantsDirectory.resetpasswordfragment)
                             }
                         }
+                        appDatabase?.UserDao()?.insert(user)
+                            ?.subscribeOn(Schedulers.io())
+                            ?.observeOn(AndroidSchedulers.mainThread())
+                            ?.subscribe(object : CompletableObserver{
+                                override fun onComplete() {
+                                    Log.i("insert user", "completed")
+                                }
+
+                                override fun onSubscribe(d: Disposable) {
+                                    if (d.isDisposed) Log.i("Disposed", "true")
+                                }
+
+                                override fun onError(e: Throwable) {
+                                    Log.e("insert user", e.message)
+                                }
+
+                            }
+                            )
                     }
                 }
             }

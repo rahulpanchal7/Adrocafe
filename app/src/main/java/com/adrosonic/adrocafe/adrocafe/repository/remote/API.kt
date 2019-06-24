@@ -1,6 +1,7 @@
 package com.adrosonic.adrocafe.adrocafe.repository.remote
 
 import com.adrosonic.adrocafe.adrocafe.repository.remote.dao.LoginDao
+import com.adrosonic.adrocafe.adrocafe.repository.remote.dao.OrdersDao
 import com.adrosonic.adrocafe.adrocafe.repository.remote.dao.ProductsDao
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import retrofit2.Retrofit
@@ -21,6 +22,10 @@ object API {
 
     fun login(): LoginDao {
         return builder(LoginDao::class.java)
+    }
+
+    fun order(): OrdersDao {
+        return builder(OrdersDao::class.java)
     }
 
 }

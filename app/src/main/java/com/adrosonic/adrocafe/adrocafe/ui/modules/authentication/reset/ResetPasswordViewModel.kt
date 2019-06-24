@@ -22,16 +22,12 @@ class ResetPasswordViewModel(application: Application) : AndroidViewModel(applic
 
     private val _navigateTo = MutableLiveData<Event<String>>()
 
-    @get: Bindable
     val navigateTo : LiveData<Event<String>> = _navigateTo
 
-    @Bindable
     var editTextNewPassword = MutableLiveData<String>()
 
-    @Bindable
     var editTextConfirmPassword = MutableLiveData<String>()
 
-    @get: Bindable
     val isResetEnable = ObservableBoolean(false)
 
     fun onResetClick(newpassword: String?){

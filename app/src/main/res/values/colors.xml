@@ -6,7 +6,7 @@
     <color name="colorBackground">#fff6f2</color>
     <color name="colorToolbar">#f5f5f5</color>
     <color name="colorText">#707070</color>
-    <color name="colorTextLight">#afafaf</color>
+    <color name="colorTextLight">#AFAFAF</color>
     <color name="colorAlternate">#87bcbf</color>
     <color name="colorTextAlternate">#c1ffda</color>
 </resources>

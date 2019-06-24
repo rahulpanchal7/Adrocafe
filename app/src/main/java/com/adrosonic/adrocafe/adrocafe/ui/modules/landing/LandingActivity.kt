@@ -12,11 +12,14 @@ import android.view.Menu
 import android.view.MenuItem
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
+import com.adrosonic.adrocafe.adrocafe.repository.remote.API
 import com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.login.LoginActivity
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodFragment
+import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderFragment
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.activity_landing.*
 import kotlinx.android.synthetic.main.app_bar_landing.*
+import retrofit2.Callback
 
 class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -72,9 +75,9 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -88,7 +91,10 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     .commit()
             }
             R.id.nav_oders -> {
-
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container_landing, OrderFragment(), "order")
+                    .commit()
             }
             R.id.nav_credits -> {
 
@@ -103,7 +109,7 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
             }
             R.id.nav_logout -> {
-//                preferenceHelper?.removeValue(ConstantsDirectory.PREFS_ACCESS_TOKEN)
+                preferenceHelper?.removeValue(ConstantsDirectory.PREFS_ACCESS_TOKEN)
                 preferenceHelper?.save(ConstantsDirectory.IS_LOGGED_IN, false)
                 startActivity(Intent(this,LoginActivity::class.java))
                 finish()
