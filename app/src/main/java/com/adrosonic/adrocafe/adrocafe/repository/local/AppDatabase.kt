@@ -4,11 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.adrosonic.adrocafe.adrocafe.data.OrderDetails
-import com.adrosonic.adrocafe.adrocafe.data.Orders
-import com.adrosonic.adrocafe.adrocafe.data.Product
-import com.adrosonic.adrocafe.adrocafe.data.User
+import com.adrosonic.adrocafe.adrocafe.data.*
 import com.adrosonic.adrocafe.adrocafe.repository.local.dao.OrderDao
+import com.adrosonic.adrocafe.adrocafe.repository.local.dao.OrderWithDetailsDao
 import com.adrosonic.adrocafe.adrocafe.repository.local.dao.ProductDao
 import com.adrosonic.adrocafe.adrocafe.repository.local.dao.UserDao
 
@@ -21,6 +19,7 @@ abstract class AppDatabase: RoomDatabase(){
     abstract fun UserDao(): UserDao
     abstract fun ProductDao(): ProductDao
     abstract fun OrderDao(): OrderDao
+    abstract fun OrderWithDetails(): OrderWithDetailsDao
 
     companion object {
         @Volatile private var instance: AppDatabase? = null

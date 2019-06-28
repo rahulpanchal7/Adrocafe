@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adrosonic.adrocafe.adrocafe.AdrocafeApp
 import com.adrosonic.adrocafe.adrocafe.data.OrderDetails
+import com.adrosonic.adrocafe.adrocafe.data.OrderWithDetails
 import com.adrosonic.adrocafe.adrocafe.data.Orders
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
 import com.adrosonic.adrocafe.adrocafe.repository.remote.API
@@ -95,6 +96,28 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
                             override fun onError(t: Throwable?) {
                                 Log.e("getall orders", t?.message)
+                            }
+
+                        })
+                    appDatabase?.OrderWithDetails()?.loadOrderWithDetails()
+                        ?.subscribeOn(Schedulers.io())
+                        ?.observeOn(AndroidSchedulers.mainThread())
+                        ?.subscribe(object : FlowableSubscriber<OrderWithDetails>{
+                            override fun onComplete() {
+                                Log.i("OrderWithDetails", "Complete")
+                            }
+
+                            override fun onSubscribe(s: Subscription) {
+                                s.request(Long.MAX_VALUE)
+                                Log.i("OrderWithDetails", "Subscribe")
+                            }
+
+                            override fun onNext(t: OrderWithDetails?) {
+                                Log.i("OrderWithDetails", t?.order?.id)
+                            }
+
+                            override fun onError(t: Throwable?) {
+                                t?.stackTrace
                             }
 
                         })

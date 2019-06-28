@@ -1,5 +1,6 @@
 package com.adrosonic.adrocafe.adrocafe.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -9,6 +10,7 @@ import androidx.room.PrimaryKey
     childColumns = arrayOf("orderId"),
     onDelete = ForeignKey.CASCADE,
     onUpdate = ForeignKey.CASCADE)))
+//@Entity
 data class OrderDetails(
     var amount: String?,
     var quantity: String?,
@@ -17,5 +19,6 @@ data class OrderDetails(
     @PrimaryKey
     var id: String,
     var datecreated: String?,
+    @ColumnInfo(index = true)
     var orderId: String?
 )
