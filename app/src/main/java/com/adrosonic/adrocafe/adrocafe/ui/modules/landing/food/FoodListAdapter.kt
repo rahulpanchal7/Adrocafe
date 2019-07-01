@@ -1,6 +1,7 @@
 package com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -8,8 +9,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.Product
 import com.adrosonic.adrocafe.adrocafe.databinding.ItemFoodListBinding
+import com.adrosonic.adrocafe.adrocafe.ui.interfaces.AlterCartInterface
 
-class FoodListAdapter(private var products: List<Product>): RecyclerView.Adapter<FoodListAdapter.ViewHolder>() {
+class FoodListAdapter(private var products: List<Product>): RecyclerView.Adapter<FoodListAdapter.ViewHolder>(), AlterCartInterface {
+
+    companion object{
+        var badgeCount: Int = 0
+    }
+
+    override fun onAddItem(view: View, product: Product) {
+        badgeCount += 1
+
+    }
+
+    override fun onMinusItem(view: View, product: Product) {
+        badgeCount -= 1
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

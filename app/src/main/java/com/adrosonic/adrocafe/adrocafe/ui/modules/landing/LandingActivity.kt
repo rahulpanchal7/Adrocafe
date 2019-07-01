@@ -12,14 +12,13 @@ import android.view.Menu
 import android.view.MenuItem
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
-import com.adrosonic.adrocafe.adrocafe.repository.remote.API
 import com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.login.LoginActivity
+import com.adrosonic.adrocafe.adrocafe.ui.modules.cart.CartActivity
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodFragment
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderFragment
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.activity_landing.*
 import kotlinx.android.synthetic.main.app_bar_landing.*
-import retrofit2.Callback
 
 class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -76,7 +75,10 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_cart -> {
+                startActivity(Intent(this, CartActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
