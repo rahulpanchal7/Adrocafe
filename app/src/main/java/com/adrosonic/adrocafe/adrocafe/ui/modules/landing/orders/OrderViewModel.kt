@@ -74,35 +74,11 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
             .enqueue(object : Callback<List<Orders>> {
                 override fun onFailure(call: Call<List<Orders>>, t: Throwable) {
                     Log.e("Order Fetch", t.localizedMessage)
-                    appDatabase?.OrderDao()?.getAll()
-                        ?.subscribeOn(Schedulers.io())
-                        ?.observeOn(AndroidSchedulers.mainThread())
-                        ?.subscribe(object : FlowableSubscriber<List<Orders>>{
-                            override fun onComplete() {
-                                Log.i("getall orders", "onComplete")
-                            }
 
-                            override fun onSubscribe(s: Subscription) {
-                                Log.i("getall orders", "onSubscribe")
-                                s.request(Long.MAX_VALUE)
-                            }
-
-                            override fun onNext(t: List<Orders>?) {
-                                orders.value = t
-                                completedOrders.value = t?.filter { it.status == "Completed" }
-                                inProgressOrders.value = t?.filter { it.status == "In Progress" }
-                                cancelledOrders.value = t?.filter { it.status == "Cancelled" }
-                            }
-
-                            override fun onError(t: Throwable?) {
-                                Log.e("getall orders", t?.message)
-                            }
-
-                        })
                     appDatabase?.OrderWithDetails()?.loadOrderWithDetails()
                         ?.subscribeOn(Schedulers.io())
                         ?.observeOn(AndroidSchedulers.mainThread())
-                        ?.subscribe(object : FlowableSubscriber<OrderWithDetails>{
+                        ?.subscribe(object : FlowableSubscriber<List<OrderWithDetails>>{
                             override fun onComplete() {
                                 Log.i("OrderWithDetails", "Complete")
                             }
@@ -112,8 +88,18 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
                                 Log.i("OrderWithDetails", "Subscribe")
                             }
 
-                            override fun onNext(t: OrderWithDetails?) {
-                                Log.i("OrderWithDetails", t?.order?.id)
+                            override fun onNext(t: List<OrderWithDetails>?) {
+                                Log.i("OrderWithDetails", ""+t?.size)
+                                val localOrderList = mutableListOf<Orders>()
+                                t?.forEach {
+                                    val localOrders = it.order
+                                    localOrders.orderDetails = it.orderDetails.toTypedArray()
+                                    localOrderList.add(localOrders)
+                                }
+                                orders.value = localOrderList
+                                completedOrders.value = localOrderList.filter { it.status == "Completed" }
+                                inProgressOrders.value = localOrderList.filter { it.status == "In Progress" }
+                                cancelledOrders.value = localOrderList.filter { it.status == "Cancelled" }
                             }
 
                             override fun onError(t: Throwable?) {
