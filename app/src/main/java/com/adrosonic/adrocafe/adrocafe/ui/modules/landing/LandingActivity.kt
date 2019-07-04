@@ -2,7 +2,9 @@ package com.adrosonic.adrocafe.adrocafe.ui.modules.landing
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
@@ -11,18 +13,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.adrosonic.adrocafe.adrocafe.R
+import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
 import com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.login.LoginActivity
 import com.adrosonic.adrocafe.adrocafe.ui.modules.cart.CartActivity
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodFragment
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderFragment
+import com.adrosonic.adrocafe.adrocafe.utils.BadgeDrawable
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.activity_landing.*
 import kotlinx.android.synthetic.main.app_bar_landing.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var preferenceHelper: PreferenceHelper ?= null
+    private var cartMenu: Menu ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +64,23 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         drawer_layout.setRadius(Gravity.START, 25f)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onAlterBadgeCount(event: MessageEvent){
+        cartMenu?.let {menu ->
+            Log.i("onAlter","Reached")
+            val icon = menu.findItem(R.id.action_cart).icon as LayerDrawable
+            val reuse = icon.findDrawableByLayerId(R.id.ic_badge)
+            val badge: BadgeDrawable = if (reuse is BadgeDrawable){
+                reuse
+            } else {
+              BadgeDrawable(this)
+            }
+            badge.setCount(event.message)
+            icon.mutate()
+            icon.setDrawableByLayerId(R.id.ic_badge, badge)
+        }
+    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -67,6 +92,7 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.landing, menu)
+        cartMenu = menu
         return true
     }
 
@@ -120,5 +146,15 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 }

@@ -7,6 +7,7 @@
     <data>
 
         <variable name="product" type="com.adrosonic.adrocafe.adrocafe.data.Product"/>
+        <variable name="event" type="com.adrosonic.adrocafe.adrocafe.ui.interfaces.AlterCartInterface"/>
 
     </data>
 
@@ -71,18 +72,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" app:srcCompat="@drawable/ic_plus"
                             android:id="@+id/imageButton_plus" android:background="@android:color/transparent"
-                            android:contentDescription="@string/itemfood"/>
+                            android:onClick="@{() -> event.onAddItem(product)}"
+                            android:contentDescription="@string/itemfood" android:padding="8dp"/>
                     <TextView
-                            android:text="0"
+                            android:text="@{Integer.toString(product.plusminusqty)}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/textView_plusminus_qty"
                             android:textAlignment="center"
-                            android:layout_marginBottom="4dp" android:layout_marginTop="4dp"/>
+                    />
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" app:srcCompat="@drawable/ic_minus"
                             android:id="@+id/imageButton_minus" android:background="@android:color/transparent"
-                            android:contentDescription="@string/itemfood"/>
+                            android:onClick="@{() -> event.onMinusItem(product)}"
+                            android:contentDescription="@string/itemfood" android:padding="8dp"/>
                 </LinearLayout>
                 <LinearLayout
                         android:orientation="horizontal"
