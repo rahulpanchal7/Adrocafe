@@ -15,6 +15,7 @@ import com.adrosonic.adrocafe.adrocafe.data.Product
 import com.adrosonic.adrocafe.adrocafe.databinding.FragmentBeveragesFoodBinding
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodListAdapter
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodViewModel
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.fragment_beverages_food.*
 
 class BeveragesFoodFragment : Fragment() {
@@ -30,7 +31,10 @@ class BeveragesFoodFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        foodListAdapter = FoodListAdapter(products)
+        foodListAdapter = FoodListAdapter(products, ConstantsDirectory.beverages)
+        activity?.run {
+            viewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
@@ -43,10 +47,8 @@ class BeveragesFoodFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
-
-        viewModel?.getBeverages()?.observe(this, Observer {products ->
-            foodListAdapter?.swap(products)
+        viewModel?.getProducts()?.observe(this, Observer {products ->
+            foodListAdapter?.swap(products, ConstantsDirectory.beverages)
         })
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

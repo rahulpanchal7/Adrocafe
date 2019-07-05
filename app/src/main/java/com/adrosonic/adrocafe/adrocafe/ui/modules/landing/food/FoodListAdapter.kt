@@ -10,12 +10,20 @@ import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
 import com.adrosonic.adrocafe.adrocafe.data.Product
 import com.adrosonic.adrocafe.adrocafe.databinding.ItemFoodListBinding
 import com.adrosonic.adrocafe.adrocafe.ui.interfaces.AlterCartInterface
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import org.greenrobot.eventbus.EventBus
 
-class FoodListAdapter(private var products: List<Product>): RecyclerView.Adapter<FoodListAdapter.ViewHolder>(), AlterCartInterface {
+class FoodListAdapter(products: List<Product>, productType: String): RecyclerView.Adapter<FoodListAdapter.ViewHolder>(), AlterCartInterface {
 
     companion object {
         var badgeCount: Int = 0
+    }
+
+    var products = when (productType) {
+        ConstantsDirectory.all -> products
+        ConstantsDirectory.beverages -> products.filter { it.product_type == 1 }
+        ConstantsDirectory.snacks -> products.filter { it.product_type == 2 }
+        else -> products.filter { it.product_type == 3 }
     }
 
     override fun onAddItem(product: Product) {
@@ -27,7 +35,9 @@ class FoodListAdapter(private var products: List<Product>): RecyclerView.Adapter
     override fun onMinusItem(product: Product) {
         if (badgeCount > 0){
             badgeCount -= 1
-            product.plusminusqty -= 1
+            if (product.plusminusqty > 0){
+                product.plusminusqty -= 1
+            }
             alterBadgeCount(badgeCount)
         }
     }
@@ -46,10 +56,15 @@ class FoodListAdapter(private var products: List<Product>): RecyclerView.Adapter
         holder.bind(products[position])
     }
 
-    fun swap(products: List<Product>) {
+    fun swap(products: List<Product>, productType: String) {
         val diffCallback = FoodDiffCallback(this.products, products)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.products = products
+        this.products = when (productType) {
+            ConstantsDirectory.all -> products
+            ConstantsDirectory.beverages -> products.filter { it.product_type == 1 }
+            ConstantsDirectory.snacks -> products.filter { it.product_type == 2 }
+            else -> products.filter { it.product_type == 3 }
+        }
         diffResult.dispatchUpdatesTo(this)
     }
 

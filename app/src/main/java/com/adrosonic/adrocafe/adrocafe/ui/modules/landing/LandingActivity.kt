@@ -12,12 +12,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.ViewModelProviders
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
 import com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.login.LoginActivity
 import com.adrosonic.adrocafe.adrocafe.ui.modules.cart.CartActivity
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodFragment
+import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodViewModel
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderFragment
 import com.adrosonic.adrocafe.adrocafe.utils.BadgeDrawable
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
@@ -46,6 +48,7 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar_landing, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
+
         drawer_layout.addDrawerListener(toggle)
 
         setDrawerCustomProperties()

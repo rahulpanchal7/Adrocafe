@@ -14,6 +14,7 @@ import com.adrosonic.adrocafe.adrocafe.data.Product
 import com.adrosonic.adrocafe.adrocafe.databinding.FragmentOtherFoodBinding
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodListAdapter
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodViewModel
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 
 class OtherFoodFragment : Fragment() {
 
@@ -28,7 +29,10 @@ class OtherFoodFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        foodListAdapter = FoodListAdapter(products)
+        foodListAdapter = FoodListAdapter(products, ConstantsDirectory.other)
+        activity?.run {
+            viewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
@@ -41,10 +45,8 @@ class OtherFoodFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(FoodViewModel::class.java)
-        // TODO: Use the ViewModel
-        viewModel?.getOthers()?.observe(this, Observer {products ->
-            foodListAdapter?.swap(products)
+        viewModel?.getProducts()?.observe(this, Observer {products ->
+            foodListAdapter?.swap(products, ConstantsDirectory.other)
         })
     }
 
