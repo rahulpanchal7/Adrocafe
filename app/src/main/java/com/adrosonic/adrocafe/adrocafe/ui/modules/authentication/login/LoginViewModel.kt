@@ -2,26 +2,21 @@ package com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.login
 
 import android.app.Application
 import android.util.Log
-import androidx.databinding.Bindable
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adrosonic.adrocafe.adrocafe.AdrocafeApp
-import com.adrosonic.adrocafe.adrocafe.data.Event
+import com.adrosonic.adrocafe.adrocafe.data.SingleLiveEvent
 import com.adrosonic.adrocafe.adrocafe.data.User
 import com.adrosonic.adrocafe.adrocafe.data.UserLoginModel
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
 import com.adrosonic.adrocafe.adrocafe.repository.remote.API
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import io.reactivex.CompletableObserver
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,9 +27,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val appDatabase = (application.applicationContext as AdrocafeApp).appDatabase
 
-    private val _navigateTo = MutableLiveData<Event<String>>()
+    private val _navigateTo = MutableLiveData<SingleLiveEvent<String>>()
 
-    val navigateTo : LiveData<Event<String>> = _navigateTo
+    val navigateTo : LiveData<SingleLiveEvent<String>> = _navigateTo
 
     var editTextUsername = MutableLiveData<String>()
 
@@ -64,9 +59,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         user.isvaliduser.let {isValid ->
                             if (!isValid) {
                                 preferenceHelper.save(ConstantsDirectory.IS_LOGGED_IN, true)
-                                _navigateTo.value = Event(ConstantsDirectory.landingactivity)
+                                _navigateTo.value = SingleLiveEvent(ConstantsDirectory.landingactivity)
                             } else {
-                                _navigateTo.value = Event(ConstantsDirectory.resetpasswordfragment)
+                                _navigateTo.value = SingleLiveEvent(ConstantsDirectory.resetpasswordfragment)
                             }
                         }
                         appDatabase?.UserDao()?.insert(user)
@@ -94,6 +89,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onForgetClick(){
-        _navigateTo.value = Event(ConstantsDirectory.forgetpasswordfragment)
+        _navigateTo.value = SingleLiveEvent(ConstantsDirectory.forgetpasswordfragment)
     }
 }

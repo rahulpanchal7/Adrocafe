@@ -19,6 +19,7 @@ class OrderFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(false)
         return inflater.inflate(R.layout.fragment_order, container, false)
     }
 

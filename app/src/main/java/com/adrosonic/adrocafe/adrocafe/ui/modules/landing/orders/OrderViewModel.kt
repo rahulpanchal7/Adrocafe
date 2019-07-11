@@ -33,38 +33,8 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val completedOrders: MutableLiveData<List<Orders>> by lazy {
-        MutableLiveData<List<Orders>>().also {
-            loadOrders()
-        }
-    }
-
-    private val inProgressOrders: MutableLiveData<List<Orders>> by lazy {
-        MutableLiveData<List<Orders>>().also {
-            loadOrders()
-        }
-    }
-
-    private val cancelledOrders: MutableLiveData<List<Orders>> by lazy {
-        MutableLiveData<List<Orders>>().also {
-            loadOrders()
-        }
-    }
-
     fun getOrders(): LiveData<List<Orders>> {
         return orders
-    }
-
-    fun getComplete(): LiveData<List<Orders>>{
-        return completedOrders
-    }
-
-    fun getInProgress(): LiveData<List<Orders>>{
-        return inProgressOrders
-    }
-
-    fun getCancelled(): LiveData<List<Orders>>{
-        return cancelledOrders
     }
 
     private fun loadOrders(){
@@ -72,7 +42,9 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
         val email = preferenceHelper.getValueString(ConstantsDirectory.PREFS_USERNAME)
         API.order().fetchOrderUser(jwt, email)
             .enqueue(object : Callback<List<Orders>> {
+
                 override fun onFailure(call: Call<List<Orders>>, t: Throwable) {
+
                     Log.e("Order Fetch", t.localizedMessage)
 
                     appDatabase?.OrderWithDetails()?.loadOrderWithDetails()
@@ -97,9 +69,6 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
                                     localOrderList.add(localOrders)
                                 }
                                 orders.value = localOrderList
-                                completedOrders.value = localOrderList.filter { it.status == "Completed" }
-                                inProgressOrders.value = localOrderList.filter { it.status == "In Progress" }
-                                cancelledOrders.value = localOrderList.filter { it.status == "Cancelled" }
                             }
 
                             override fun onError(t: Throwable?) {
@@ -112,9 +81,6 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onResponse(call: Call<List<Orders>>, response: Response<List<Orders>>) {
                     if (response.isSuccessful){
                         orders.value = response.body()
-                        completedOrders.value = response.body()?.filter { it.status == "Completed" }
-                        inProgressOrders.value = response.body()?.filter { it.status == "In Progress" }
-                        cancelledOrders.value = response.body()?.filter { it.status == "Cancelled" }
                         val orderDetailList: MutableList<OrderDetails> ?= mutableListOf()
                         response.body()?.forEach {order ->
                             order.orderDetails?.forEach {orderDetails ->
@@ -172,9 +138,6 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
                                 override fun onNext(t: List<Orders>?) {
                                     orders.value = t
-                                    completedOrders.value = t?.filter { it.status == "Completed" }
-                                    inProgressOrders.value = t?.filter { it.status == "In Progress" }
-                                    cancelledOrders.value = t?.filter { it.status == "Cancelled" }
                                 }
 
                                 override fun onError(t: Throwable?) {

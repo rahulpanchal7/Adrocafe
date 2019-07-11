@@ -13,6 +13,7 @@ import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.Orders
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderListAdapter
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderViewModel
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.fragment_cancelled_orders.*
 
 
@@ -24,7 +25,10 @@ class CancelledOrdersFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        orderListAdapter = OrderListAdapter(ordersList)
+        orderListAdapter = OrderListAdapter(ordersList, ConstantsDirectory.cancelled)
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(OrderViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
@@ -37,10 +41,8 @@ class CancelledOrdersFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
-
-        viewModel?.getCancelled()?.observe(this, Observer {ordersList ->
-            orderListAdapter?.swap(ordersList)
+        viewModel?.getOrders()?.observe(this, Observer {ordersList ->
+            orderListAdapter?.swap(ordersList, ConstantsDirectory.cancelled)
         })
     }
 

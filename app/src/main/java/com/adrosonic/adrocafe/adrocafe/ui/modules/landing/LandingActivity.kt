@@ -32,9 +32,9 @@ import org.greenrobot.eventbus.ThreadMode
 class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var preferenceHelper: PreferenceHelper ?= null
-    private var cartMenu: Menu ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
         setSupportActionBar(toolbar_landing)
@@ -67,48 +67,11 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         drawer_layout.setRadius(Gravity.START, 25f)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onAlterBadgeCount(event: MessageEvent){
-        cartMenu?.let {menu ->
-            Log.i("onAlter","Reached")
-            val icon = menu.findItem(R.id.action_cart).icon as LayerDrawable
-            val reuse = icon.findDrawableByLayerId(R.id.ic_badge)
-            val badge: BadgeDrawable = if (reuse is BadgeDrawable){
-                reuse
-            } else {
-              BadgeDrawable(this)
-            }
-            badge.setCount(event.message)
-            icon.mutate()
-            icon.setDrawableByLayerId(R.id.ic_badge, badge)
-        }
-    }
-
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.landing, menu)
-        cartMenu = menu
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_cart -> {
-                startActivity(Intent(this, CartActivity::class.java))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -149,15 +112,5 @@ class LandingActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
     }
 }

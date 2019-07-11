@@ -8,8 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.Orders
 import com.adrosonic.adrocafe.adrocafe.databinding.ItemOrderListBinding
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 
-class OrderListAdapter(private var ordersList: List<Orders>): RecyclerView.Adapter<OrderListAdapter.ViewHolder>() {
+class OrderListAdapter(ordersList: List<Orders>, orderType: String): RecyclerView.Adapter<OrderListAdapter.ViewHolder>() {
+
+    var ordersList = when (orderType){
+        ConstantsDirectory.all -> ordersList
+        ConstantsDirectory.completed -> ordersList.filter { it.status == ConstantsDirectory.completed }
+        ConstantsDirectory.inprogress -> ordersList.filter { it.status == ConstantsDirectory.inprogress }
+        else -> ordersList.filter { it.status == ConstantsDirectory.cancelled }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,10 +33,15 @@ class OrderListAdapter(private var ordersList: List<Orders>): RecyclerView.Adapt
         holder.bind(ordersList[position])
     }
 
-    fun swap(ordersList: List<Orders>){
+    fun swap(ordersList: List<Orders>, orderType: String){
         val diffCallback = OrderDiffCallback(this.ordersList, ordersList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.ordersList = ordersList
+        this.ordersList = when (orderType){
+            ConstantsDirectory.all -> ordersList
+            ConstantsDirectory.completed -> ordersList.filter { it.status == ConstantsDirectory.completed }
+            ConstantsDirectory.inprogress -> ordersList.filter { it.status == ConstantsDirectory.inprogress }
+            else -> ordersList.filter { it.status == ConstantsDirectory.cancelled }
+        }
         diffResult.dispatchUpdatesTo(this)
     }
 

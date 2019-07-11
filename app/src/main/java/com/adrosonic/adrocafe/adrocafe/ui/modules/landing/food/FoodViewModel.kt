@@ -35,39 +35,9 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-//    private val snacks: MutableLiveData<List<Product>> by lazy {
-//        MutableLiveData<List<Product>>().also {
-//            loadProducts()
-//        }
-//    }
-//
-//    private val beverages: MutableLiveData<List<Product>> by lazy {
-//        MutableLiveData<List<Product>>().also {
-//            loadProducts()
-//        }
-//    }
-//
-//    private val others: MutableLiveData<List<Product>> by lazy {
-//        MutableLiveData<List<Product>>().also {
-//            loadProducts()
-//        }
-//    }
-
     fun getProducts(): LiveData<List<Product>> {
         return products
     }
-
-//    fun getSnacks(): LiveData<List<Product>> {
-//        return snacks
-//    }
-//
-//    fun getBeverages(): LiveData<List<Product>> {
-//        return beverages
-//    }
-//
-//    fun getOthers(): LiveData<List<Product>> {
-//        return others
-//    }
 
     private fun loadProducts(){
         val jwt = preferenceHelper.getValueString(ConstantsDirectory.PREFS_ACCESS_TOKEN)
@@ -91,9 +61,6 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
 
                             override fun onNext(t: List<Product>?) {
                                 products.value = t
-//                                snacks.value = t?.filter { it.product_type == 2 }
-//                                beverages.value = t?.filter { it.product_type == 1 }
-//                                others.value = t?.filter { it.product_type == 3 }
                             }
 
                             override fun onError(t: Throwable?) {
@@ -105,17 +72,34 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
 
                 override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
                     if (response.isSuccessful) {
-                        products.value = response.body()
-//                        snacks.value = response.body()?.filter { it.product_type == 2 }
-//                        beverages.value = response.body()?.filter { it.product_type == 1 }
-//                        others.value = response.body()?.filter { it.product_type == 3 }
-
                         appDatabase?.ProductDao()?.insertAll(response.body())
                             ?.subscribeOn(Schedulers.io())
                             ?.observeOn(AndroidSchedulers.mainThread())
                             ?.subscribe(object : CompletableObserver{
                                 override fun onComplete() {
                                     Log.i("insert product", "Complete")
+                                    appDatabase.ProductDao().getAll()
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        ?.subscribe(object : FlowableSubscriber<List<Product>>{
+                                            override fun onComplete() {
+                                                Log.i("getall product", "onComplete")
+                                            }
+
+                                            override fun onSubscribe(s: Subscription) {
+                                                Log.i("getall product", "onSubscribe")
+                                                s.request(Long.MAX_VALUE)
+                                            }
+
+                                            override fun onNext(t: List<Product>?) {
+                                                products.value = t
+                                            }
+
+                                            override fun onError(t: Throwable?) {
+                                                Log.e("getall product", t?.message)
+                                            }
+
+                                        })
                                 }
 
                                 override fun onSubscribe(d: Disposable) {
@@ -141,9 +125,6 @@ class FoodViewModel(application: Application) : AndroidViewModel(application) {
 
                                 override fun onNext(t: List<Product>?) {
                                     products.value = t
-//                                    snacks.value = t?.filter { it.product_type == 2 }
-//                                    beverages.value = t?.filter { it.product_type == 1 }
-//                                    others.value = t?.filter { it.product_type == 3 }
                                 }
 
                                 override fun onError(t: Throwable?) {

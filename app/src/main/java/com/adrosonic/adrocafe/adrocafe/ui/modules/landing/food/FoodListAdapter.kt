@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.adrosonic.adrocafe.adrocafe.R
-import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
+import com.adrosonic.adrocafe.adrocafe.data.AlterBadgeEvent
 import com.adrosonic.adrocafe.adrocafe.data.Product
 import com.adrosonic.adrocafe.adrocafe.databinding.ItemFoodListBinding
 import com.adrosonic.adrocafe.adrocafe.ui.interfaces.AlterCartInterface
@@ -14,10 +14,6 @@ import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import org.greenrobot.eventbus.EventBus
 
 class FoodListAdapter(products: List<Product>, productType: String): RecyclerView.Adapter<FoodListAdapter.ViewHolder>(), AlterCartInterface {
-
-    companion object {
-        var badgeCount: Int = 0
-    }
 
     var products = when (productType) {
         ConstantsDirectory.all -> products
@@ -27,18 +23,16 @@ class FoodListAdapter(products: List<Product>, productType: String): RecyclerVie
     }
 
     override fun onAddItem(product: Product) {
-        badgeCount += 1
         product.plusminusqty += 1
-        alterBadgeCount(badgeCount)
+        product.ordered_qty = product.plusminusqty
+        alterBadgeCount(product, true)
     }
 
     override fun onMinusItem(product: Product) {
-        if (badgeCount > 0){
-            badgeCount -= 1
-            if (product.plusminusqty > 0){
-                product.plusminusqty -= 1
-            }
-            alterBadgeCount(badgeCount)
+        if (product.plusminusqty > 0){
+            product.plusminusqty -= 1
+            product.ordered_qty = product.plusminusqty
+            alterBadgeCount(product, false)
         }
     }
 
@@ -57,19 +51,20 @@ class FoodListAdapter(products: List<Product>, productType: String): RecyclerVie
     }
 
     fun swap(products: List<Product>, productType: String) {
-        val diffCallback = FoodDiffCallback(this.products, products)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.products = when (productType) {
+        val newProducts = when (productType) {
             ConstantsDirectory.all -> products
             ConstantsDirectory.beverages -> products.filter { it.product_type == 1 }
             ConstantsDirectory.snacks -> products.filter { it.product_type == 2 }
             else -> products.filter { it.product_type == 3 }
         }
+        val diffCallback = FoodDiffCallback(this.products, newProducts)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        this.products = newProducts
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun alterBadgeCount(count: Int) {
-        EventBus.getDefault().post(MessageEvent(count.toString()))
+    private fun alterBadgeCount(product: Product, doAdd: Boolean) {
+        EventBus.getDefault().post(AlterBadgeEvent(product, doAdd))
     }
 
     inner class ViewHolder(private val binding: ItemFoodListBinding): RecyclerView.ViewHolder(binding.root) {

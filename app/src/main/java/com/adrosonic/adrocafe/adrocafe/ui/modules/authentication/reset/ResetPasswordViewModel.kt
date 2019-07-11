@@ -1,13 +1,11 @@
 package com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.reset
 
 import android.app.Application
-import android.util.Log
-import androidx.databinding.Bindable
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.adrosonic.adrocafe.adrocafe.data.Event
+import com.adrosonic.adrocafe.adrocafe.data.SingleLiveEvent
 import com.adrosonic.adrocafe.adrocafe.data.UserResetModel
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
 import com.adrosonic.adrocafe.adrocafe.repository.remote.API
@@ -20,9 +18,9 @@ class ResetPasswordViewModel(application: Application) : AndroidViewModel(applic
 
     private val preferenceHelper = PreferenceHelper(application)
 
-    private val _navigateTo = MutableLiveData<Event<String>>()
+    private val _navigateTo = MutableLiveData<SingleLiveEvent<String>>()
 
-    val navigateTo : LiveData<Event<String>> = _navigateTo
+    val navigateTo : LiveData<SingleLiveEvent<String>> = _navigateTo
 
     var editTextNewPassword = MutableLiveData<String>()
 
@@ -47,7 +45,7 @@ class ResetPasswordViewModel(application: Application) : AndroidViewModel(applic
                         override fun onResponse(call: Call<String>, response: Response<String>) {
                             if (response.isSuccessful){
                                 preferenceHelper.save(ConstantsDirectory.IS_LOGGED_IN, true)
-                                _navigateTo.value = Event(ConstantsDirectory.landingactivity)
+                                _navigateTo.value = SingleLiveEvent(ConstantsDirectory.landingactivity)
                             }
                         }
                     })

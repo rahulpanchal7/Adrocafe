@@ -13,6 +13,9 @@ object ConstantsDirectory {
     const val snacks = "snacks"
     const val beverages = "beverages"
     const val other = "other"
+    const val completed = "Completed"
+    const val inprogress = "In Progress"
+    const val cancelled = "Cancelled"
 
     //Network
     const val BASE_URL = "http://13.233.130.114:8080/api/"
@@ -23,6 +26,7 @@ object ConstantsDirectory {
     const val IS_LOGGED_IN = "checklogin"
     const val PREFS_USERNAME = "username"
     const val PREFS_PASSWORD = "password"
+    const val PREFS_BADGE_COUNT = "badgecount"
 
     //Database
     const val DB_VERSION = 1

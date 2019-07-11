@@ -14,7 +14,7 @@ import com.adrosonic.adrocafe.adrocafe.R
 import com.adrosonic.adrocafe.adrocafe.data.Orders
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderListAdapter
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderViewModel
-import kotlinx.android.synthetic.main.fragment_all_food.*
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import kotlinx.android.synthetic.main.fragment_all_orders.*
 
 class AllOrdersFragment : Fragment() {
@@ -25,7 +25,10 @@ class AllOrdersFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        orderListAdapter = OrderListAdapter(ordersList)
+        orderListAdapter = OrderListAdapter(ordersList, ConstantsDirectory.all)
+        viewModel = activity?.run {
+            ViewModelProviders.of(this).get(OrderViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
@@ -38,10 +41,8 @@ class AllOrdersFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
-
         viewModel?.getOrders()?.observe(this, Observer {ordersList ->
-            orderListAdapter?.swap(ordersList)
+            orderListAdapter?.swap(ordersList, ConstantsDirectory.all)
         })
     }
 
