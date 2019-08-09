@@ -1,4 +1,4 @@
-package com.adrosonic.adrocafe.adrocafe.ui.modules.cart
+package com.adrosonic.adrocafe.adrocafe.ui.modules.staff
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -7,68 +7,56 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.adrosonic.adrocafe.adrocafe.AdrocafeApp
 import com.adrosonic.adrocafe.adrocafe.R
-import com.adrosonic.adrocafe.adrocafe.data.*
-import com.adrosonic.adrocafe.adrocafe.databinding.FragmentCartBinding
-import com.adrosonic.adrocafe.adrocafe.repository.remote.API
-import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.food.FoodListAdapter
+import com.adrosonic.adrocafe.adrocafe.data.ChangeStatusEvent
+import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
+import com.adrosonic.adrocafe.adrocafe.data.Orders
+import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
+import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderViewModel
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import io.reactivex.CompletableObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_cart.*
+import kotlinx.android.synthetic.main.fragment_staff_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.lang.Exception
 
-class CartFragment : Fragment() {
+class StaffMainFragment : Fragment() {
 
     companion object {
-        fun newInstance() = CartFragment()
+        fun newInstance() = StaffMainFragment()
     }
 
-    private var viewModel: CartViewModel ?= null
-    private var foodListAdapter: FoodListAdapter ?= null
-    private var products = mutableListOf<Product>()
-    private var binding: FragmentCartBinding ?= null
+    private var viewModel: OrderViewModel?= null
+    private var staffListAdapter: StaffListAdapter?= null
+    private var ordersList = listOf<Orders>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        foodListAdapter = FoodListAdapter(products, ConstantsDirectory.all)
+        staffListAdapter = StaffListAdapter(ordersList, PreferenceHelper(context ?: return).getValueString(ConstantsDirectory.PREFS_ACCESS_TOKEN) ?: "")
         viewModel = activity?.run {
-            ViewModelProviders.of(this).get(CartViewModel::class.java)
+            ViewModelProviders.of(this).get(OrderViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cart, container, false)
-        binding?.viewModel = viewModel
-        binding?.lifecycleOwner = this
-        return binding?.root
+    ): View {
+        return inflater.inflate(R.layout.fragment_staff_main, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel?.getProducts()?.observe(this, Observer {products ->
-            foodListAdapter?.swap(products, ConstantsDirectory.all)
-        })
-        viewModel?.navigateTo?.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                EventBus.getDefault().post(MessageEvent(it))
-            }
+        viewModel?.getOrders()?.observe(this, Observer {ordersList ->
+            this.ordersList = ordersList
+            staffListAdapter?.swap(ordersList)
         })
     }
 
@@ -78,11 +66,11 @@ class CartFragment : Fragment() {
         setupRecyclerView()
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
 
-        recyclerView_order.apply {
+        recyclerView_staff.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = foodListAdapter
+            adapter = staffListAdapter
         }
     }
 
@@ -92,27 +80,29 @@ class CartFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onAlterCartItems(event: AlterBadgeEvent){
-        updateOrderQuantity(event.product)
+    fun onChangeStatus(event: ChangeStatusEvent) {
+        updateOrderQuantity(event.orders)
     }
 
-    private fun updateOrderQuantity(product: Product){
+    private fun updateOrderQuantity(orders: Orders){
         (activity?.applicationContext as AdrocafeApp).appDatabase
-            ?.ProductDao()
-            ?.update(product)
+            ?.OrderDao()
+            ?.updateStatus(orders.id, orders.status ?: "")
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : CompletableObserver {
+            ?.subscribe(object : CompletableObserver{
                 override fun onComplete() {
-                    Log.i("update product","onComplete")
+                    Log.i("updateStatus", "onComplete")
+                    staffListAdapter?.swap(ordersList)
+                    recyclerView_staff.smoothScrollToPosition(0)
                 }
 
                 override fun onSubscribe(d: Disposable) {
-                    Log.i("update product","onSubscribe")
+                    Log.i("updateStatus", "onSubscribe")
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.i("update product",e.message)
+                    Log.e("updateStatus", e.message)
                 }
 
             })
@@ -122,5 +112,4 @@ class CartFragment : Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
-
 }

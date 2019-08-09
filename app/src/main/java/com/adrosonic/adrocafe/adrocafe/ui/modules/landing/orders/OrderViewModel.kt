@@ -39,7 +39,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun loadOrders(){
         val jwt = preferenceHelper.getValueString(ConstantsDirectory.PREFS_ACCESS_TOKEN)
-        val email = preferenceHelper.getValueString(ConstantsDirectory.PREFS_USERNAME)
+        val email = preferenceHelper.getValueString(ConstantsDirectory.PREFS_USEREMAIL)
         API.order().fetchOrderUser(jwt, email)
             .enqueue(object : Callback<List<Orders>> {
 
@@ -124,24 +124,32 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
                             })
 
                     } else {
-                        appDatabase?.OrderDao()?.getAll()
+                        appDatabase?.OrderWithDetails()?.loadOrderWithDetails()
                             ?.subscribeOn(Schedulers.io())
                             ?.observeOn(AndroidSchedulers.mainThread())
-                            ?.subscribe(object : FlowableSubscriber<List<Orders>>{
+                            ?.subscribe(object : FlowableSubscriber<List<OrderWithDetails>>{
                                 override fun onComplete() {
-                                    Log.i("getall orders", "onComplete")
+                                    Log.i("OrderWithDetails", "Complete")
                                 }
 
                                 override fun onSubscribe(s: Subscription) {
-                                    Log.i("getall orders", "onSubscribe")
+                                    s.request(Long.MAX_VALUE)
+                                    Log.i("OrderWithDetails", "Subscribe")
                                 }
 
-                                override fun onNext(t: List<Orders>?) {
-                                    orders.value = t
+                                override fun onNext(t: List<OrderWithDetails>?) {
+                                    Log.i("OrderWithDetails", ""+t?.size)
+                                    val localOrderList = mutableListOf<Orders>()
+                                    t?.forEach {
+                                        val localOrders = it.order
+                                        localOrders.orderDetails = it.orderDetails.toTypedArray()
+                                        localOrderList.add(localOrders)
+                                    }
+                                    orders.value = localOrderList
                                 }
 
                                 override fun onError(t: Throwable?) {
-                                    Log.e("getall orders", t?.message)
+                                    t?.stackTrace
                                 }
 
                             })

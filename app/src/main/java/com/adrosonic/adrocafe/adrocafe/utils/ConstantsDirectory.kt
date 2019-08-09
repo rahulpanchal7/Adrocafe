@@ -16,6 +16,8 @@ object ConstantsDirectory {
     const val completed = "Completed"
     const val inprogress = "In Progress"
     const val cancelled = "Cancelled"
+    const val staff = "Staff"
+    const val delivered = "Delivered"
 
     //Network
     const val BASE_URL = "http://13.233.130.114:8080/api/"
@@ -24,8 +26,10 @@ object ConstantsDirectory {
     const val PREFS_NAME = "adrocafe"
     const val PREFS_ACCESS_TOKEN = "jwt"
     const val IS_LOGGED_IN = "checklogin"
+    const val PREFS_USEREMAIL = "useremail"
     const val PREFS_USERNAME = "username"
     const val PREFS_PASSWORD = "password"
+    const val PREFS_ROLE = "role"
     const val PREFS_BADGE_COUNT = "badgecount"
 
     //Database
@@ -33,4 +37,6 @@ object ConstantsDirectory {
     const val DB_NAME = "adrocafe"
     const val USER_TABLE = "user"
 
+    //Bundles
+    const val BUNDLE_ORDER = "orders"
 }

@@ -45,4 +45,6 @@
     <string name="cart">Cart</string>
     <string name="pay">Pay ></string>
     <string name="select_payment_mode">Select Payment Mode</string>
+    <string name="deliver">Deliver</string>
+    <string name="adrocafe_staff">Adrocafe Staff</string>
 </resources>

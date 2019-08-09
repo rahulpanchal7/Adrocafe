@@ -21,9 +21,15 @@ interface ProductDao {
     @Query("UPDATE product SET ordered_qty =:ordered_qty WHERE id =:id")
     fun updateById(id: Int, ordered_qty: Int): Int
 
+    @Query("UPDATE product SET ordered_qty = 0")
+    fun updateOrderPlaced(): Completable
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(product: Product): Completable
 
     @Query("SELECT SUM(ordered_qty) FROM product")
     fun getTotalBadgeCount(): Single<Int>
+
+    @Query("SELECT * FROM product WHERE ordered_qty > 0")
+    fun getOrderedProduct(): Flowable<List<Product>>
 }

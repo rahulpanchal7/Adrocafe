@@ -2,10 +2,7 @@ package com.adrosonic.adrocafe.adrocafe.repository.remote.dao
 
 import com.adrosonic.adrocafe.adrocafe.data.Orders
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface OrdersDao {
 
@@ -14,4 +11,16 @@ interface OrdersDao {
     fun fetchOrderUser(@Header("Authorization")token: String?,
                        @Query("email") emailId:String?): Call<List<Orders>>
 
+    @Headers("Accept: application/json")
+    @POST("order/createOrder")
+    fun createOrder(@Body orders: Orders,
+                    @Header("Authorization")token: String?): Call<Orders>
+
+    @GET("order/delivered")
+    fun deliverOrder(@Query("id") id: Int,
+                     @Header("Authorization")token: String?): Call<Boolean>
+
+    @GET("order/cancelOrder")
+    fun cancelOrder(@Query("id") id: Int,
+                    @Header("Authorization")token: String?): Call<Boolean>
 }

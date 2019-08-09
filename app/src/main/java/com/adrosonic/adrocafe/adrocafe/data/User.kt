@@ -17,6 +17,8 @@ data class User(
     var useremail: String,
     var userdesignation: String,
     var jwtToken: String
-){
+) {
+
     constructor(): this(0, 0, false, 0L,"","","","","","","")
+
 }

@@ -31,7 +31,7 @@ class ResetPasswordViewModel(application: Application) : AndroidViewModel(applic
     fun onResetClick(newpassword: String?){
         newpassword?.let {newpassword ->
             val jwt = preferenceHelper.getValueString(ConstantsDirectory.PREFS_ACCESS_TOKEN)
-            val username = preferenceHelper.getValueString(ConstantsDirectory.PREFS_USERNAME).let { it } ?: return
+            val username = preferenceHelper.getValueString(ConstantsDirectory.PREFS_USEREMAIL).let { it } ?: return
             val password = preferenceHelper.getValueString(ConstantsDirectory.PREFS_PASSWORD).let { it } ?: return
             jwt?.let {token ->
                 API

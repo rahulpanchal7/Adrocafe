@@ -18,9 +18,12 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
+                android:name=".ui.modules.staff.StaffMainActivity">
+        </activity>
+        <activity
                 android:name=".ui.modules.cart.CartActivity"
-                android:theme="@style/AppTheme"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme">
         </activity>
         <activity
                 android:name=".ui.modules.main.MainActivity"
@@ -36,8 +39,8 @@
         <activity
                 android:name=".ui.modules.landing.LandingActivity"
                 android:label="@string/title_activity_landing"
-                android:theme="@style/AppTheme"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme">
         </activity>
     </application>
 

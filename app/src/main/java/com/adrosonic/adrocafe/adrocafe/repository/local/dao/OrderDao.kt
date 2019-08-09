@@ -18,4 +18,7 @@ interface OrderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDetails(orderDetails: List<OrderDetails>?): Completable
 
+    @Query("UPDATE orders SET status =:status WHERE id=:id")
+    fun updateStatus(id: String, status: String): Completable
+
 }

@@ -9,4 +9,6 @@
     <color name="colorTextLight">#AFAFAF</color>
     <color name="colorAlternate">#87bcbf</color>
     <color name="colorTextAlternate">#c1ffda</color>
+    <color name="colorCancel">#941313</color>
+    <color name="colorAccept">#13941C</color>
 </resources>

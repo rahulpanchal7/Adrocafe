@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.adrosonic.adrocafe.adrocafe.utils.CardDrawerLayout
+<layout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
+        xmlns:tools="http://schemas.android.com/tools">
 
-        tools:openDrawer="start">
-
-    <include
-            layout="@layout/app_bar_landing"
+    <com.adrosonic.adrocafe.adrocafe.utils.CardDrawerLayout
+            android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:itemTextColor="@color/design_default_color_background"
-            android:background="@drawable/color_orange_grad"
-            app:headerLayout="@layout/nav_header_landing"
-            app:menu="@menu/activity_landing_drawer"/>
+            tools:openDrawer="start">
 
-</com.adrosonic.adrocafe.adrocafe.utils.CardDrawerLayout>
+        <include
+                layout="@layout/app_bar_landing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <com.google.android.material.navigation.NavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                app:itemTextColor="@color/design_default_color_background"
+                android:background="@drawable/color_orange_grad"
+                app:headerLayout="@layout/nav_header_landing"
+                app:menu="@menu/activity_landing_drawer"/>
+
+    </com.adrosonic.adrocafe.adrocafe.utils.CardDrawerLayout>
+
+</layout>

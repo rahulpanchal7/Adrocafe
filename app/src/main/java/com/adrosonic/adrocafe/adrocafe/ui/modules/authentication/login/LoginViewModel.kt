@@ -51,15 +51,17 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 if (response.isSuccessful){
                     val loginResponse = response.body()
                     loginResponse?.let {user ->
-                        user.jwtToken.let {jwt ->
-                            preferenceHelper.save(ConstantsDirectory.PREFS_ACCESS_TOKEN, "Bearer $jwt")
-                            preferenceHelper.save(ConstantsDirectory.PREFS_USERNAME, editTextUsername.value!!)
-                            preferenceHelper.save(ConstantsDirectory.PREFS_PASSWORD, editTextPassword.value!!)
-                        }
+                        preferenceHelper.save(ConstantsDirectory.PREFS_ACCESS_TOKEN, "Bearer ${user.jwtToken}")
+                        preferenceHelper.save(ConstantsDirectory.PREFS_USEREMAIL, user.useremail)
+                        preferenceHelper.save(ConstantsDirectory.PREFS_USERNAME, user.username)
+                        preferenceHelper.save(ConstantsDirectory.PREFS_ROLE, user.roles)
                         user.isvaliduser.let {isValid ->
                             if (!isValid) {
                                 preferenceHelper.save(ConstantsDirectory.IS_LOGGED_IN, true)
-                                _navigateTo.value = SingleLiveEvent(ConstantsDirectory.landingactivity)
+                                if (user.roles == ConstantsDirectory.staff)
+                                    _navigateTo.value = SingleLiveEvent(ConstantsDirectory.staff)
+                                else
+                                    _navigateTo.value = SingleLiveEvent(ConstantsDirectory.landingactivity)
                             } else {
                                 _navigateTo.value = SingleLiveEvent(ConstantsDirectory.resetpasswordfragment)
                             }

@@ -5,12 +5,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(foreignKeys = arrayOf(ForeignKey(entity = Orders::class,
+@Entity(foreignKeys = [ForeignKey(entity = Orders::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("orderId"),
     onDelete = ForeignKey.CASCADE,
-    onUpdate = ForeignKey.CASCADE)))
-//@Entity
+    onUpdate = ForeignKey.CASCADE)]
+)
 data class OrderDetails(
     var amount: String?,
     var quantity: String?,

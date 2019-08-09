@@ -9,6 +9,7 @@ import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
 import com.adrosonic.adrocafe.adrocafe.databinding.ActivityLoginBinding
 import com.adrosonic.adrocafe.adrocafe.ui.modules.authentication.reset.ResetPasswordFragment
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.LandingActivity
+import com.adrosonic.adrocafe.adrocafe.ui.modules.staff.StaffMainActivity
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -51,6 +52,10 @@ class LoginActivity : AppCompatActivity() {
                     )
                     .addToBackStack(null)
                     .commit()
+            }
+            ConstantsDirectory.staff ->{
+                startActivity(Intent(this, StaffMainActivity::class.java))
+                finish()
             }
         }
     }
