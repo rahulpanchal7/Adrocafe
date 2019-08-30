@@ -58,7 +58,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         user.isvaliduser.let {isValid ->
                             if (!isValid) {
                                 preferenceHelper.save(ConstantsDirectory.IS_LOGGED_IN, true)
-                                if (user.roles == ConstantsDirectory.staff)
+                                if (user.roles != ConstantsDirectory.staff) //Hard code changes
+//                                if (user.roles == ConstantsDirectory.staff)
                                     _navigateTo.value = SingleLiveEvent(ConstantsDirectory.staff)
                                 else
                                     _navigateTo.value = SingleLiveEvent(ConstantsDirectory.landingactivity)

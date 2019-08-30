@@ -15,6 +15,7 @@ import com.adrosonic.adrocafe.adrocafe.data.ChangeStatusEvent
 import com.adrosonic.adrocafe.adrocafe.data.MessageEvent
 import com.adrosonic.adrocafe.adrocafe.data.Orders
 import com.adrosonic.adrocafe.adrocafe.repository.PreferenceHelper
+import com.adrosonic.adrocafe.adrocafe.repository.local.AppDatabase
 import com.adrosonic.adrocafe.adrocafe.ui.modules.landing.orders.OrderViewModel
 import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory
 import io.reactivex.CompletableObserver
@@ -33,7 +34,9 @@ class StaffMainFragment : Fragment() {
     }
 
     private var viewModel: OrderViewModel?= null
+
     private var staffListAdapter: StaffListAdapter?= null
+
     private var ordersList = listOf<Orders>()
 
 

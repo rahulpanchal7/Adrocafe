@@ -33,7 +33,7 @@ data class Orders(
     @Bindable get() = status == "In Progress"
     set(value) {
         field = value
-        notifyPropertyChanged(BR.progress)
+//        notifyPropertyChanged(BR.progress)   //error
     }
 
 
@@ -42,7 +42,7 @@ data class Orders(
     @Bindable get() = status.let { it } ?: ""
     set(value) {
         status = value
-        notifyPropertyChanged(BR.newStatus)
+//        notifyPropertyChanged(BR.newStatus)  //error
     }
 
     override fun equals(other: Any?): Boolean {

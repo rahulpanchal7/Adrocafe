@@ -2,6 +2,7 @@ package com.adrosonic.adrocafe.adrocafe.ui.modules.cart
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -16,6 +17,7 @@ import io.reactivex.FlowableSubscriber
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.greenrobot.eventbus.EventBus
 import org.reactivestreams.Subscription
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,6 +35,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val showProgress =  ObservableBoolean(false)
+
+    val _showDialog = MutableLiveData<SingleLiveEvent<String>>()
+
+    val showDialog : LiveData<SingleLiveEvent<String>> = _showDialog
 
     val _navigateTo = MutableLiveData<SingleLiveEvent<String>>()
 
@@ -68,12 +74,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onError(t: Throwable?) {
                     Log.e("getOrderedProduct", t?.message)
                 }
-
             })
     }
 
     fun placeOrder(){
-
         showProgress.set(true)
         val orderDetailsList = mutableListOf<OrderDetailsList>()
         products.value?.forEach {product ->
@@ -107,12 +111,12 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                             override fun onError(e: Throwable) {
                                 Log.e("updateOrderPlaced", "on")
                             }
-
                         })
                 }
-
             })
     }
 
-
+    fun confirmOrderDialog() {
+        _showDialog.value = SingleLiveEvent("Are you sure?")
+    }
 }

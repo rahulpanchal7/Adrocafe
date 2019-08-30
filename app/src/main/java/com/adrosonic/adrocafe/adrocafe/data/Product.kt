@@ -25,6 +25,6 @@ data class Product(
     @Bindable get() = ordered_qty
     set(value) {
         ordered_qty = value
-        notifyPropertyChanged(BR.plusminusqty)
+//        notifyPropertyChanged(BR.plusminusqty) //error
     }
 }

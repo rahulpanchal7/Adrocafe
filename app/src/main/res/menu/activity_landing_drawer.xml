@@ -8,7 +8,7 @@
                 android:id="@+id/nav_food"
                 android:title="@string/food"/>
         <item
-                android:id="@+id/nav_oders"
+                android:id="@+id/nav_orders"
                 android:title="@string/order"/>
         <item
                 android:id="@+id/nav_credits"
@@ -28,7 +28,7 @@
         <menu xmlns:tools="http://schemas.android.com/tools">
             <item
                     android:id="@+id/nav_logout"
-                    android:title="@string/logout"/>
+                    android:title="@string/logout" />
         </menu>
     </item>
 

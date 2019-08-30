@@ -2,6 +2,7 @@ package com.adrosonic.adrocafe.adrocafe.repository.local.dao
 
 import androidx.room.*
 import com.adrosonic.adrocafe.adrocafe.data.Product
+import com.adrosonic.adrocafe.adrocafe.data.User
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -32,4 +33,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM product WHERE ordered_qty > 0")
     fun getOrderedProduct(): Flowable<List<Product>>
+
+    @Query("DELETE FROM product")
+    fun nukeProducts() : Completable
 }

@@ -7,6 +7,7 @@ object ConstantsDirectory {
     const val loginfragment = "login"
     const val resetpasswordfragment = "reset"
     const val landingactivity = "landing"
+    const val cartactivity = "cart"
     const val forgetpasswordfragment = "forget"
     const val foodfragment = "food"
     const val all = "all"

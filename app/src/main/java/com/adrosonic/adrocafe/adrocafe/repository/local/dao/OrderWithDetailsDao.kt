@@ -12,4 +12,6 @@ interface OrderWithDetailsDao {
     @Transaction
     @Query("SELECT * FROM orders")
     fun loadOrderWithDetails(): Flowable<List<OrderWithDetails>>
+
+
 }

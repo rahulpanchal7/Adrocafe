@@ -1,5 +1,7 @@
 package com.adrosonic.adrocafe.adrocafe.ui.modules.cart
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -23,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_cart.*
+import kotlinx.coroutines.processNextEventInCurrentThread
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -30,6 +34,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import com.adrosonic.adrocafe.adrocafe.utils.ConstantsDirectory.cartactivity as cartactivity
 
 class CartFragment : Fragment() {
 
@@ -70,16 +75,21 @@ class CartFragment : Fragment() {
                 EventBus.getDefault().post(MessageEvent(it))
             }
         })
+        viewModel?.showDialog?.observe(this, Observer { message ->
+            val dialog = AlertDialog.Builder(activity)
+                .setMessage("Are you sure?")
+                .setPositiveButton("Yes"
+                ) { dialog, which -> viewModel?.placeOrder() }
+                .setNegativeButton("Cancel", null)
+                .create()
+            dialog.show()
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupRecyclerView()
     }
-
     private fun setupRecyclerView(){
-
         recyclerView_order.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = foodListAdapter

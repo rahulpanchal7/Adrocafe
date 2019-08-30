@@ -21,7 +21,10 @@ interface UserDao {
     fun insertAll(users: List<User>): Completable
 
     @Delete
-    fun delete(user: User)
+    fun deleteUsers(user: User) : Completable
+
+    @Query("DELETE FROM user")
+    fun nukeUsers(): Completable
 
     @Update
     fun updateUser(vararg user: User): Completable
